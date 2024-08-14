@@ -115,7 +115,7 @@ int main(void) {
 		if (kick.trigger() && bass.trigger()) {
 
 			if (hithat.trigger()) {
-				bass.notes().modified(103);
+				bass.notes().modified(bass.notes().current() + 12);
 			}
 
 			else {
@@ -134,10 +134,10 @@ int main(void) {
 	{
 		auto& kick = snd::get<"kick">(pat);
 
-		kick.channel(0U).triggers().signature(1, 16).insert(
-			1, 0, 0, 1, 0, 0, 0, 0,
-			1, 0, 0, 1, 0, 0, 0, 0
+		kick.channel(0U).triggers().signature(1, 4).insert(
+			1
 		);
+		kick.notes().signature(1, 16).insert(24, 28);
 	}
 
 
@@ -145,23 +145,23 @@ int main(void) {
 		auto& bass = snd::get<"bass">(pat);
 
 		bass.channel(1U);
-		bass.triggers().signature(1, 8).insert(1, 0, 1);
-		bass.notes().signature(1, 1).insert(70, 60);
+		bass.triggers().signature(1, 16).insert(1, 0, 0, 1, 0);
+		bass.notes().signature(1, 1).insert(35, 38, 31, 31);
 	}
 
 	{
 		auto& hithat = snd::get<"hithat">(pat);
 
-		hithat.channel(2U).triggers().signature(1, 16).insert(1, 0, 1, 0, 1, 0, 1);
+		hithat.channel(2U).triggers().signature(1, 16).insert(1, 0, 0, 0);
 	}
 
-	{
-		auto& lead = snd::get<"lead">(pat);
-
-		lead.channel(1U);
-		lead.triggers().signature(1, 8).insert(1, 0, 1, 0, 1);
-		lead.notes().signature(1, 1).insert(89, 88);
-	}
+	//{
+	//	auto& lead = snd::get<"lead">(pat);
+	//
+	//	lead.channel(1U);
+	//	lead.triggers().signature(1, 8).insert(1, 0, 1, 0, 1);
+	//	lead.notes().signature(1, 1).insert(89, 88);
+	//}
 
 
 
