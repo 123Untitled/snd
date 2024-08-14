@@ -1,6 +1,7 @@
 #include "track.hpp"
 #include "string.hpp"
 #include "map.hpp"
+#include "running.hpp"
 
 #include <unordered_map>
 #include <map>
@@ -157,13 +158,18 @@ int main(void) {
 		auto& bass = snd::get<"bass">(pat);
 
 		bass.channel(1U);
-		bass.triggers().signature(1, 4).insert(0, 0, 0, 0, 0);
+		bass.triggers().signature(1, 2).insert(0, 0, 0, 0, 0);
 		bass.notes().signature(1, 1).insert(35, 38, 31, 31);
 	}
 
 
 
 	// start ------------------------------
+
+	// record signal SIGINT
+	signal(SIGINT, [](int) -> void {
+		snd::running::stop();
+	});
 
 	snd::clock cl;
 
