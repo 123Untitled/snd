@@ -6,6 +6,7 @@
 #include <map>
 
 #include "triggers.hpp"
+#include "time/clock.hpp"
 
 #include "midi/coremidi/eventlist.hpp"
 #include "midi/coremidi/coremidi.hpp"
@@ -15,8 +16,9 @@ namespace snd {
 
 
 
+
 	template <snd::string... ___names>
-	class pattern final {
+	class pattern final : public snd::clockable {
 
 
 		private:
@@ -44,7 +46,24 @@ namespace snd {
 			: _tracks{}, _conditions{nullptr}, _msrcs{}, _evs{} {
 
 				_msrcs = coremidi::sources();
+			}
 
+			auto clock_start(void) -> void override {
+				_evs.start();
+				_evs.send(_msrcs[0]);
+				_evs.clear();
+			}
+
+			/* stop */
+			auto clock_stop(void) -> void override {
+				_evs.stop();
+				_evs.send(_msrcs[0]);
+				_evs.clear();
+			}
+
+			/* tick */
+			auto clock_tick(const snd::size_t& timeline) -> void override {
+				play(timeline);
 			}
 
 
@@ -102,29 +121,22 @@ namespace snd {
 
 int main(void) {
 
-	snd::pattern<"kick", "bass", "lead", "hithat"> pat;
+	snd::pattern<"kick", "bass"> pat;
 
 	pat.conditions([](auto& ___map) -> void {
 
 		// get track
 		auto& kick = snd::get<"kick">(___map);
 		auto& bass = snd::get<"bass">(___map);
-		auto& hithat = snd::get<"hithat">(___map);
+
+
+		bass.trigger(kick.trigger());
 
 		//return;
-		if (kick.trigger() && bass.trigger()) {
-
-			if (hithat.trigger()) {
-				bass.notes().modified(bass.notes().current() + 12);
-			}
-
-			else {
-				//bass.notes().modified(79);
-			}
+		if (kick.trigger()) {
 		}
 
 		else {
-			bass.note(bass.notes().current());
 		}
 
 
@@ -134,10 +146,10 @@ int main(void) {
 	{
 		auto& kick = snd::get<"kick">(pat);
 
-		kick.channel(0U).triggers().signature(1, 4).insert(
-			1
+		kick.channel(0U).triggers().signature(1, 16).insert(
+			1,0,0,0,   1,0,0,0,   0,0,1,0,   0,0,0,0
 		);
-		kick.notes().signature(1, 16).insert(24, 28);
+		kick.notes().signature(1, 4).insert(40, 36, 36, 36);
 	}
 
 
@@ -145,55 +157,17 @@ int main(void) {
 		auto& bass = snd::get<"bass">(pat);
 
 		bass.channel(1U);
-		bass.triggers().signature(1, 16).insert(1, 0, 0, 1, 0);
+		bass.triggers().signature(1, 4).insert(0, 0, 0, 0, 0);
 		bass.notes().signature(1, 1).insert(35, 38, 31, 31);
 	}
 
-	{
-		auto& hithat = snd::get<"hithat">(pat);
-
-		hithat.channel(2U).triggers().signature(1, 16).insert(1, 0, 0, 0);
-	}
-
-	//{
-	//	auto& lead = snd::get<"lead">(pat);
-	//
-	//	lead.channel(1U);
-	//	lead.triggers().signature(1, 8).insert(1, 0, 1, 0, 1);
-	//	lead.notes().signature(1, 1).insert(89, 88);
-	//}
 
 
+	// start ------------------------------
 
+	snd::clock cl;
 
-	// compute in microseconds 130bpm at 24ppq
-	const snd::size_t bpm = 130U;
-
-	snd::size_t timeline = 0U;
-
-	const long microsecondsPerMinute = 60 * 1000000; // 60 seconds * 1,000,000 microseconds per second
-    const int pulsesPerQuarterNote = 24;
-    long inter = microsecondsPerMinute / (bpm * pulsesPerQuarterNote);
-
-	snd::size_t time = 1U;
-
-	while (true) {
-		pat.play(timeline);
-
-
-		if (timeline % 24 == 0) {
-			std::cout << '\r' << time << std::flush;
-			time = time == 4 ? 1 : time + 1;
-		}
-
-		// sleep
-		::usleep(inter);
-		++timeline;
-
-	}
-
-
-
+	cl.start(pat);
 
 	return 0;
 }

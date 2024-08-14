@@ -1,12 +1,12 @@
 #ifndef ___MSH_TIME_REALTIME_HPP___
 #define ___MSH_TIME_REALTIME_HPP___
 
-#include "msh/types.hpp"
+#include "types.hpp"
 
 
 // -- M S H  N A M E S P A C E ------------------------------------------------
 
-namespace msh {
+namespace snd {
 
 
 	// -- forward declarations ------------------------------------------------
@@ -18,7 +18,7 @@ namespace msh {
 	// -- R E A L T I M E -----------------------------------------------------
 
 	/* realtime */
-	auto realtime(const msh::i64&, const msh::timebase&) noexcept -> bool;
+	auto realtime(const snd::i64&, const snd::timebase&) noexcept -> bool;
 
 } // namespace msh
 

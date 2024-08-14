@@ -12,9 +12,6 @@
 
 namespace snd {
 
-
-	// -- C L O C K A B L E ---------------------------------------------------
-
 	class clockable {
 
 
@@ -65,6 +62,64 @@ namespace snd {
 
 	}; // class clockable
 
+	// -- C L O C K A B L E ---------------------------------------------------
+
+	class player : public snd::clockable {
+
+
+		private:
+
+			// -- private types -----------------------------------------------
+
+			/* self type */
+			using ___self = snd::player;
+
+
+		public:
+
+			// -- public lifecycle --------------------------------------------
+
+			/* default constructor */
+			player(void) noexcept = default;
+
+			/* copy constructor */
+			player(const ___self&) noexcept = default;
+
+			/* move constructor */
+			player(___self&&) noexcept = default;
+
+			/* destructor */
+			virtual ~player(void) noexcept = default;
+
+
+			// -- public assignment operators ---------------------------------
+
+			/* copy assignment operator */
+			auto operator=(const ___self&) noexcept -> ___self& = default;
+
+			/* move assignment operator */
+			auto operator=(___self&&) noexcept -> ___self& = default;
+
+
+			// -- public interface --------------------------------------------
+
+			/* start */
+			auto clock_start(void) -> void override {
+				// do nothing
+			}
+
+			/* stop */
+			auto clock_stop(void) -> void override {
+				// do nothing
+			}
+
+			/* tick */
+			auto clock_tick(const snd::size_t&) -> void override {
+				// do nothing
+			}
+
+	}; // class player
+
 
 	// -- C L O C K -----------------------------------------------------------
 
@@ -82,19 +137,19 @@ namespace snd {
 			// -- private members ---------------------------------------------
 
 			/* timebase */
-			msh::timebase _timebase;
+			snd::timebase _timebase;
 
 			/* bpm */
 			snd::bpm _bpm;
 
 			/* nano clock */
-			msh::i64 _nano_clock;
+			snd::i64 _nano_clock;
 
 			/* nano target */
-			msh::i64 _nano_target;
+			snd::i64 _nano_target;
 
 			/* count */
-			msh::u64 _count;
+			snd::u64 _count;
 
 
 			/* timeline */
@@ -103,15 +158,14 @@ namespace snd {
 			/* request */
 			struct ::timespec  _request;
 
-			msh::i64 _start;
-			msh::i64 _last_start;
-			msh::i64 _end;
-
-			msh::i64 _elapsed;
-			msh::i64 _acc_ref;
-			msh::i64 _acc_stamp;
-			msh::i64 _acc_diff;
-			msh::i64 _loop_diff;
+			snd::i64 _start;
+			snd::i64 _last_start;
+			snd::i64 _end;
+			snd::i64 _elapsed;
+			snd::i64 _acc_ref;
+			snd::i64 _acc_stamp;
+			snd::i64 _acc_diff;
+			snd::i64 _loop_diff;
 
 
 		public:
@@ -143,7 +197,7 @@ namespace snd {
 			// -- public methods ----------------------------------------------
 
 			/* start */
-			auto start(msh::clockable&) -> void;
+			auto start(snd::clockable&) -> void;
 
 			/* stop */
 			auto stop(void) noexcept -> void;
@@ -152,16 +206,16 @@ namespace snd {
 			// -- public modifiers --------------------------------------------
 
 			/* bpm */
-			auto bpm(const msh::u8) noexcept -> void;
+			auto bpm(const snd::u8) noexcept -> void;
 
 
 			// -- public accessors --------------------------------------------
 
 			/* bpm */
-			auto bpm(void) const noexcept -> const msh::bpm&;
+			auto bpm(void) const noexcept -> const snd::bpm&;
 
 			/* count */
-			auto count(void) const noexcept -> msh::u64;
+			auto count(void) const noexcept -> snd::u64;
 
 			/* timeline */
 			auto timeline(void) const noexcept -> double;
@@ -187,10 +241,10 @@ namespace snd {
 			auto _sleep(void) noexcept -> void;
 
 			/* now */
-			auto _now(void) const noexcept -> msh::u64;
+			auto _now(void) const noexcept -> snd::u64;
 
 	}; // class clock
 
-} // namespace msh
+} // namespace snd
 
 #endif // ___MSH_TIME_CLOCK_HPP___

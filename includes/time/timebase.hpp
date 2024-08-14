@@ -6,7 +6,7 @@
 
 // -- M S H  N A M E S P A C E ------------------------------------------------
 
-namespace msh {
+namespace snd {
 
 
 	// -- T I M E B A S E -----------------------------------------------------
@@ -19,7 +19,7 @@ namespace msh {
 			// -- private types -----------------------------------------------
 
 			/* self type */
-			using ___self = msh::timebase;
+			using ___self = snd::timebase;
 
 
 			// -- private members ---------------------------------------------
