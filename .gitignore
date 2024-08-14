@@ -1,0 +1,10 @@
+/exec_msh
+
+/.cache/
+
+/sources/**/*.d
+/sources/**/*.o
+
+/compile_commands.json
+
+/hierarchy
